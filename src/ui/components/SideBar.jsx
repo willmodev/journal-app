@@ -4,7 +4,7 @@ import { Box, Divider, Drawer, Grid, List, ListItemButton, ListItemIcon, ListIte
 export const SideBar = ({ drawerWidth = 240 }) => {
     return(
         <Box
-            component={'nab'}
+            component={'nav'}
             sx={{ 
                 width: { sm: drawerWidth },
                 flexShrink: { sm: 0 }
@@ -32,7 +32,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                 <List>
                     {
                         ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'].map(title => (
-                            <ListItemButton>
+                            <ListItemButton key={ title }>
                                 <ListItemIcon>
                                     <TurnedInNot />
                                 </ListItemIcon>

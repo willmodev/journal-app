@@ -3,6 +3,8 @@ import { LoginPage, RegisterPage } from '../auth/pages/';
 import { NotFound } from '../NotFound';
 import { Root } from '../root';
 import { HomePage } from '../journal/pages';
+import { PublicRoute } from './PublicRoute';
+import { PrivateRoute } from './PrivateRoute';
 
 
 export const router = createBrowserRouter([
@@ -14,7 +16,11 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                element: <HomePage />
+                element: (
+                    <PrivateRoute>
+                        <HomePage />
+                    </PrivateRoute>
+                )
             },
             {
                 path: 'auth/',
@@ -26,12 +32,20 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: 'login',
-                        element: <LoginPage />
+                        element: (
+                            <PublicRoute>
+                                <LoginPage />
+                            </PublicRoute> 
+                        )
         
                     },
                     {
                         path: 'register',
-                        element: <RegisterPage />
+                        element: (
+                            <PublicRoute>
+                                <RegisterPage />
+                            </PublicRoute>
+                        )
                     }
                 ]
             }

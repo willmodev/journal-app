@@ -14,13 +14,9 @@ export const useAuth = () => {
 
     const [isFormSubmit, setIsFormSubmit] = useState(false);
     
-    useEffect(() => {
-        dispatch( resetStateAuth() );
-    }, [])
-  
-  
-  
-  
+    // useEffect(() => {
+    //     dispatch( resetStateAuth() );
+    // }, [])
   
   
     return {

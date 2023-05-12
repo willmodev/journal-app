@@ -32,9 +32,12 @@ export const authSlice = createSlice({
         },
         checkingCredential: (state) => {
             state.status = 'checking'
+        },
+        resetState: () => {
+            return initialState;
         }
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { login, logout, checkingCredential } = authSlice.actions
+export const { login, logout, checkingCredential, resetState } = authSlice.actions

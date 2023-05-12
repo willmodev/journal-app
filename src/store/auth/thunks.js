@@ -1,5 +1,5 @@
-import { registerUserWithEmailAndPassword, signInWithGoogle } from '../../firebase';
-import { checkingCredential, login, logout } from './authSlice'
+import { loginWithEmailAndPassword, registerUserWithEmailAndPassword, signInWithGoogle } from '../../firebase';
+import { checkingCredential, login, logout, resetState } from './authSlice'
 
 
 
@@ -9,6 +9,12 @@ export const checkingAuthentication = (email, password) => {
         dispatch( checkingCredential() );
     }
 }
+
+export const resetStateAuth = () => {
+    return async( dispatch ) => {
+        dispatch( resetState() );
+    }
+} 
 
 export const startGoogleSignIn = () => {
     return async( dispatch ) => {
@@ -32,11 +38,24 @@ export const startRegisterUserWithEmailAndPassword = ({displayName, email, passw
 
         const result = await registerUserWithEmailAndPassword({displayName, email, password});
 
-        console.log(result);
-
         if( !result.ok ) return dispatch( logout(result) );
 
         dispatch( login(result) );
         
     }
+}
+
+export const startLoginWithEmailAndPassword = ({ email, password }) => {
+    return async( dispatch ) => {
+
+        dispatch( checkingCredential() );
+
+        const result = await loginWithEmailAndPassword( {email, password} );
+
+        if ( !result.ok ) return dispatch( logout(result) );
+
+        dispatch( login(result) );
+
+    }
+
 }

@@ -1,4 +1,4 @@
-import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
+import { GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, updateProfile } from 'firebase/auth';
 import { FirebaseAuth } from './config';
 
 
@@ -53,4 +53,35 @@ export const registerUserWithEmailAndPassword = async({displayName, email, passw
         }
     }
 
+}
+
+export const loginWithEmailAndPassword = async({ email, password }) => {
+
+    try {
+        const result = await signInWithEmailAndPassword( FirebaseAuth, email, password );
+
+        const { uid, displayName, photoURL } = result.user;
+
+        return {
+            ok: true,
+            uid, email, displayName, photoURL
+        }
+        
+    } catch (error) {
+
+        let errorMessage;
+
+        switch(error.code) {
+            case 'auth/user-not-found':
+                errorMessage = 'El usuario no existe';
+                break;
+            default:
+                errorMessage = error.message
+        }
+        
+        return {
+            ok: false,
+            errorMessage
+        }
+    }
 }

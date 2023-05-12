@@ -4,10 +4,9 @@ import { Alert, Grid, Link, TextField, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { useForm } from '../../hooks/useForm';
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { startRegisterUserWithEmailAndPassword } from '../../store/auth/thunks';
-import { useMemo } from 'react';
+import { startRegisterUserWithEmailAndPassword } from '../../store/auth';
+import { useAuth } from '../hooks/useAuth';
+
 
 const formData = {
     displayName: '',
@@ -23,26 +22,21 @@ const formValidations = {
 
 export const RegisterPage = () => {
 
-    const dispatch = useDispatch();
 
-    const { status, errorMessage } = useSelector(state => state.auth);
-
-    const isRegistering = useMemo(() => status === 'checking');
-
-
-    const [isFormSubmit, setIsFormSubmit] = useState(false);
+    const { errorMessage, isAuthenticating, isFormSubmit, setIsFormSubmit, dispatch } = useAuth();
 
     const {
         displayName, email, password, onInputChange,
         displayNameValid, emailValid, passwordValid, isFormValid
     } = useForm(formData, formValidations);
 
+
     const onSubmit = (event) => {
         event.preventDefault();
         setIsFormSubmit(true);
 
         if (!isFormValid) return;
-
+        
         dispatch(startRegisterUserWithEmailAndPassword({ displayName, email, password }));
 
 
@@ -101,7 +95,7 @@ export const RegisterPage = () => {
                         <LoadingButton
                             type='submit'
                             variant='contained'
-                            loading={isRegistering}
+                            loading={isAuthenticating}
                             fullWidth
                         >
                             Crear Cuenta
@@ -109,7 +103,7 @@ export const RegisterPage = () => {
                     </Grid>
 
                     <Grid item xs={12}
-                        sx={{ display: !errorMessage ? 'none' : ''  }}
+                        sx={{ display: !errorMessage && !isFormSubmit ? 'none' : ''  }}
                     >
                         <Alert 
                             severity='error'

@@ -1,34 +1,33 @@
 import { Link as RouterLink } from 'react-router-dom';
 import { Google } from '@mui/icons-material';
-import { Grid, Link, TextField, Typography } from '@mui/material';
+import { Alert, Grid, Link, TextField, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import { AuthLayout } from '../layouts/AuthLayout';
 import { useForm } from '../../hooks';
-import { checkingAuthentication, startGoogleSignIn } from '../../store/auth';
-import { useDispatch, useSelector } from 'react-redux';
-import { useMemo } from 'react';
+import {  startGoogleSignIn, startLoginWithEmailAndPassword } from '../../store/auth';
+import { useAuth } from '../hooks/useAuth';
+
+
+const formData = {
+    email: '',
+    password: ''
+
+}
 
 export const LoginPage = () => {
 
-    const dispatch = useDispatch();
-    const { status } = useSelector(state => state.auth);
+   
+    const { errorMessage, isAuthenticating, dispatch } = useAuth();
 
 
-
-    const { email, password, onInputChange} = useForm({
-        email: 'will@google.com',
-        password: '123456'
-    })
-
-    const isAuthenticating = useMemo(() => status === 'checking', [status]);
+    const { email, password, onInputChange} = useForm(formData)
 
     const onSubmit = (event) => {
 
         event.preventDefault();
 
-        console.log({ email, password });
-        dispatch( checkingAuthentication() );
+        dispatch( startLoginWithEmailAndPassword({ email, password }) );
     }
 
     const onGoogleSignIn = () => {
@@ -56,7 +55,7 @@ export const LoginPage = () => {
                     </Grid>
                     <Grid item sx={{ mt: 2 }}>
                         <TextField 
-                            label='Password' 
+                            label='Password'
                             type='password' 
                             placeholder='******'
                             name='password'
@@ -91,6 +90,12 @@ export const LoginPage = () => {
                                 <Google />
                                 <Typography sx={{ ml: 1 }}>Google</Typography>
                             </LoadingButton>
+                        </Grid>
+
+                        <Grid item xs={12} md={6}
+                            display={ !!errorMessage ? '': 'none' }
+                        >
+                            <Alert severity='error'> { errorMessage } </Alert>
                         </Grid>
                     </Grid>
                     <Grid container justifyContent={'end'}>

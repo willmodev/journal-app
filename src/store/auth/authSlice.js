@@ -34,11 +34,8 @@ export const authSlice = createSlice({
         checkingCredential: (state) => {
             state.status = 'checking'
         },
-        resetState: () => {
-            return {
-                ...initialState,
-                status: 'not-authenticated'
-            };
+        resetState: (state) => {
+            state.errorMessage = null
         }
     },
 })

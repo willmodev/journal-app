@@ -4,8 +4,10 @@ import { Alert, Grid, Link, TextField, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { AuthLayout } from '../layouts/AuthLayout';
 import { useForm } from '../../hooks/useForm';
-import { startRegisterUserWithEmailAndPassword } from '../../store/auth';
+import { resetStateAuth, startRegisterUserWithEmailAndPassword } from '../../store/auth';
 import { useAuth } from '../hooks/useAuth';
+import { useNavigate } from 'react-router-dom';
+import { ButtonLink } from '../components';
 
 
 const formData = {
@@ -23,7 +25,8 @@ const formValidations = {
 export const RegisterPage = () => {
 
 
-    const { errorMessage, isAuthenticating, isFormSubmit, setIsFormSubmit, dispatch } = useAuth();
+    const { errorMessage, isFormSubmit, setIsFormSubmit, dispatch } = useAuth();
+    const navigate = useNavigate();
 
     const {
         displayName, email, password, onInputChange,
@@ -36,10 +39,18 @@ export const RegisterPage = () => {
         setIsFormSubmit(true);
 
         if (!isFormValid) return;
-        
+
         dispatch(startRegisterUserWithEmailAndPassword({ displayName, email, password }));
 
+    }
 
+    const onNavigateToLogin = (event) => {
+        event.preventDefault();
+
+        dispatch( resetStateAuth() );
+
+        navigate('/auth/login');
+        
     }
 
     const isError = (formField) => formField && isFormSubmit;
@@ -95,7 +106,7 @@ export const RegisterPage = () => {
                         <LoadingButton
                             type='submit'
                             variant='contained'
-                            loading={isAuthenticating}
+                            // loading={isAuthenticating}
                             fullWidth
                         >
                             Crear Cuenta
@@ -103,25 +114,26 @@ export const RegisterPage = () => {
                     </Grid>
 
                     <Grid item xs={12}
-                        sx={{ display: !errorMessage && !isFormSubmit ? 'none' : ''  }}
+                        sx={{ display: !errorMessage ? 'none' : '' }}
                     >
-                        <Alert 
+                        <Alert
                             severity='error'
                         >
-                            { errorMessage }
+                            {errorMessage}
                         </Alert>
                     </Grid>
 
                 </Grid>
 
-                <Grid container justifyContent={'end'} sx={{ mt: 2 }}>
+                <Grid container justifyContent={'end'} alignItems={'center'} sx={{ mt: 2 }}>
                     <Grid item>
                         <Typography sx={{ mr: 2 }}>¿Ya estas registrado?</Typography>
                     </Grid>
                     <Grid item>
-                        <Link component={RouterLink} to={'/auth/login'}>
-                            <Typography>Ingresar</Typography>
-                        </Link>
+                        <ButtonLink
+                            name='Ingresar'
+                            onNavigate={ onNavigateToLogin }
+                        />
                     </Grid>
 
                 </Grid>

@@ -7,21 +7,11 @@ export const useAuth = () => {
   
     const dispatch = useDispatch();
 
-    const { status, errorMessage } = useSelector(state => state.auth);
-
-    const isAuthenticating = useMemo(() => status === 'checking');
-
-
+    const { errorMessage } = useSelector(state => state.auth);
     const [isFormSubmit, setIsFormSubmit] = useState(false);
-    
-    // useEffect(() => {
-    //     dispatch( resetStateAuth() );
-    // }, [])
-  
-  
+
     return {
         errorMessage,
-        isAuthenticating,
         isFormSubmit,
         setIsFormSubmit,
         dispatch

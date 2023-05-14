@@ -1,7 +1,12 @@
 import { TurnedInNot } from '@mui/icons-material';
-import { Box, Divider, Drawer, Grid, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import { Avatar, Box, Divider, Drawer, Grid, List, ListItemButton, ListItemIcon, ListItemText, Toolbar, Typography } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 export const SideBar = ({ drawerWidth = 240 }) => {
+
+    const { displayName, photoURL } = useSelector( state => state.auth);
+    
+
     return(
         <Box
             component={'nav'}
@@ -22,9 +27,17 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                 }}
             >
                 <Toolbar>
-                    <Typography variant='h6' component={'div'}>
-                        Willinton Mora
-                    </Typography>
+                    <Grid container direction={'row'} alignItems={'center'} spacing={2} >
+                        <Grid item>
+                        <Avatar alt={ displayName } src={ photoURL } />
+                        </Grid>
+                        <Grid item>
+                            <Typography variant='h6' component={'div'}>
+                                { displayName }
+                            </Typography>
+                        </Grid>
+
+                    </Grid>
                 </Toolbar>
 
                 <Divider />

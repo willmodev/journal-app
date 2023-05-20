@@ -3,12 +3,12 @@ import { TurnedInNot } from '@mui/icons-material';
 import { useDispatch } from 'react-redux';
 import { setActiveNote } from '../../store/journal/journalSlice';
 
-export const SideBarItem = ({ id, title, date, body }) => {
+export const SideBarItem = ({ id, title, date, body, imageUrls = [] }) => {
 
     const dispatch = useDispatch();
 
     const onClickNote = () => {
-        const note = { id, title, date, body };
+        const note = { id, title, date, body, imageUrls };
         dispatch( setActiveNote(note) );
     }
 

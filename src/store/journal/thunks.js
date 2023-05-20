@@ -1,7 +1,8 @@
-import { collection, doc, setDoc } from 'firebase/firestore/lite';
+import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase';
-import { addNewEmptyNote, savingNewNote, setActiveNote, setNotes, setSaving, updateNote } from './journalSlice';
+import { addNewEmptyNote, deleteNoteById, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from './journalSlice';
 import { loadNotes } from '../../journal';
+import { fileUpload } from '../../journal/helpers/fileUpload';
 
 
 export const startNewNote = () => {
@@ -13,8 +14,9 @@ export const startNewNote = () => {
         const { uid } = getState().auth;
 
         const newNote = {
-            title: 'Mi primera entrevista',
-            body: 'Fue una experiencia increible!!',
+            title: '',
+            body: '',
+            imageUrls: [],
             date: new Date().getTime()
         }
 
@@ -60,6 +62,48 @@ export const startSaveNotes = () => {
         await setDoc(docRef, noteToFireStore, { merge: true });
 
         dispatch( updateNote(note) );
+
+    }
+}
+
+
+export const startUploadingFiles = (files = []) => {
+    return async( dispatch ) => {
+
+        dispatch( setSaving() );
+
+        const fileUploadPromises = [];
+        for (const file of files) {
+            fileUploadPromises.push( fileUpload(file) );
+        }
+        
+        const photosUrls = await Promise.all( fileUploadPromises );
+
+        // Todo 
+        dispatch( setPhotosToActiveNote( photosUrls ) );
+    }
+}
+
+export const startDeletingNote = () => {
+    return async( dispatch, getState ) => {
+
+        const { uid } = getState().auth;
+        const { active: note } = getState().journal;
+
+        console.log({uid, note});
+
+        const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${ note.id }` );
+
+        try {      
+            await deleteDoc( docRef );
+            dispatch( deleteNoteById(note) );
+        } catch (error) {
+            console.log(error.message);
+            throw new Error('Error al eliminar la nota: '+error.message);
+            
+        }
+
+        
 
     }
 }

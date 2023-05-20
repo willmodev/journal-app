@@ -30,7 +30,7 @@ export const SideBar = ({ drawerWidth = 240 }) => {
                 <Toolbar>
                     <Grid container direction={'row'} alignItems={'center'} spacing={2} >
                         <Grid item>
-                            <Avatar alt={ displayName } src='https://lh3.googleusercontent.com/a/AGNmyxZFoxUEQ169kTndIFdgyRuQ-q7S4-GDp01gH3iH=s96-c' />
+                            <Avatar alt={ displayName } src={ photoURL } />
                         </Grid>
                         <Grid item>
                             <Typography variant='h6' component={'div'}>

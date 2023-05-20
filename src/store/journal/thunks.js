@@ -1,7 +1,7 @@
 import { collection, deleteDoc, doc, setDoc } from 'firebase/firestore/lite';
 import { FirebaseDB } from '../../firebase';
-import { addNewEmptyNote, deleteNoteById, savingNewNote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from './journalSlice';
-import { loadNotes } from '../../journal';
+import { addNewEmptyNote, deleteNoteById, savingNewNote, setActiveNote, setDeleting, setNotes, setPhotosToActiveNote, setSaving, updateNote } from './journalSlice';
+import { fileDelete, loadNotes } from '../../journal';
 import { fileUpload } from '../../journal/helpers/fileUpload';
 
 
@@ -87,10 +87,18 @@ export const startUploadingFiles = (files = []) => {
 export const startDeletingNote = () => {
     return async( dispatch, getState ) => {
 
-        const { uid } = getState().auth;
-        const { active: note } = getState().journal;
+        dispatch( setDeleting() );
 
-        console.log({uid, note});
+        const { active: note } = getState().journal;
+        const { uid } = getState().auth;
+
+        const fileDeletePromises = [];
+
+        for (const img of note.imageUrls) {
+            fileDeletePromises.push(fileDelete(img));
+        }
+
+        await Promise.all( fileDeletePromises );
 
         const docRef = doc( FirebaseDB, `${ uid }/journal/notes/${ note.id }` );
 
@@ -102,8 +110,5 @@ export const startDeletingNote = () => {
             throw new Error('Error al eliminar la nota: '+error.message);
             
         }
-
-        
-
     }
 }

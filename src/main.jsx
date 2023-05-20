@@ -8,6 +8,7 @@ import { router } from './router/AppRouter';
 import './styles.css'
 import { AppTheme } from './theme';
 
+
 ReactDOM.createRoot(document.getElementById('root')).render(
     <AppTheme>
       <Provider store={store}>

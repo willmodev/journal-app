@@ -54,7 +54,11 @@ export const journalSlice = createSlice({
             state.notes = [];
             state.active = null;
         },
+        setDeleting: (state) => {
+            state.isSaving = true;
+        },
         deleteNoteById: (state, {payload}) => {
+            state.isSaving = false;
             state.active = null;
             state.notes = state.notes.filter( note => note.id !== payload.id);
         }
@@ -69,6 +73,7 @@ export const {
     deleteNoteById,
     savingNewNote, 
     setActiveNote, 
+    setDeleting,
     setNotes, 
     setPhotosToActiveNote,
     setSaving, 
